@@ -1,0 +1,19 @@
+# Binaries
+bin/
+*.exe
+
+# Environment
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage.txt
+coverage.html
