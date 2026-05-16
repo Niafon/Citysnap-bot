@@ -13,13 +13,13 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
 
-	"github.com/niko/citysnap-bot/internal/config"
-	"github.com/niko/citysnap-bot/internal/handler"
-	"github.com/niko/citysnap-bot/internal/handler/fsm"
-	"github.com/niko/citysnap-bot/internal/repository"
-	"github.com/niko/citysnap-bot/internal/repository/cache"
-	"github.com/niko/citysnap-bot/internal/server"
-	"github.com/niko/citysnap-bot/internal/service"
+	"github.com/Niafon/Citysnap-bot/internal/config"
+	"github.com/Niafon/Citysnap-bot/internal/handler"
+	"github.com/Niafon/Citysnap-bot/internal/handler/fsm"
+	"github.com/Niafon/Citysnap-bot/internal/repository"
+	"github.com/Niafon/Citysnap-bot/internal/repository/cache"
+	"github.com/Niafon/Citysnap-bot/internal/server"
+	"github.com/Niafon/Citysnap-bot/internal/service"
 )
 
 var version = "dev"

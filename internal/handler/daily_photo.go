@@ -11,9 +11,9 @@ import (
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 
-	"github.com/niko/citysnap-bot/internal/apperror"
-	"github.com/niko/citysnap-bot/internal/handler/fsm"
-	appmodel "github.com/niko/citysnap-bot/internal/model"
+	"github.com/Niafon/Citysnap-bot/internal/apperror"
+	"github.com/Niafon/Citysnap-bot/internal/handler/fsm"
+	appmodel "github.com/Niafon/Citysnap-bot/internal/model"
 )
 
 func (h *BotHandler) registerPhotoHandlers(b *bot.Bot) {

@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Niafon/Citysnap-bot/internal/model"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/niko/citysnap-bot/internal/model"
 )
 
 type InterestRepo struct {

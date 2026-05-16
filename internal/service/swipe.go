@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/Niafon/Citysnap-bot/internal/apperror"
+	"github.com/Niafon/Citysnap-bot/internal/model"
 	"github.com/google/uuid"
-	"github.com/niko/citysnap-bot/internal/apperror"
-	"github.com/niko/citysnap-bot/internal/model"
 )
 
 type SwipeService struct {

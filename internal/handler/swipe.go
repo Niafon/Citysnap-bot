@@ -12,8 +12,8 @@ import (
 	"github.com/go-telegram/bot/models"
 	"github.com/google/uuid"
 
-	"github.com/niko/citysnap-bot/internal/apperror"
-	"github.com/niko/citysnap-bot/internal/model"
+	"github.com/Niafon/Citysnap-bot/internal/apperror"
+	"github.com/Niafon/Citysnap-bot/internal/model"
 )
 
 func (h *BotHandler) registerSwipeHandlers(b *bot.Bot) {

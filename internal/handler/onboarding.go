@@ -9,7 +9,7 @@ import (
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 
-	"github.com/niko/citysnap-bot/internal/handler/fsm"
+	"github.com/Niafon/Citysnap-bot/internal/handler/fsm"
 )
 
 func (h *BotHandler) handleNickname(ctx context.Context, b *bot.Bot, update *models.Update) {

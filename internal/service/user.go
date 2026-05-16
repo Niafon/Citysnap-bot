@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/niko/citysnap-bot/internal/model"
+	"github.com/Niafon/Citysnap-bot/internal/model"
 )
 
 type UserService struct {

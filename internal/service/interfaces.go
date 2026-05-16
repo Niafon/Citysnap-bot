@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	"github.com/Niafon/Citysnap-bot/internal/model"
 	"github.com/google/uuid"
-	"github.com/niko/citysnap-bot/internal/model"
 )
 
 // UserRepository — контракт для доступа к данным пользователей.

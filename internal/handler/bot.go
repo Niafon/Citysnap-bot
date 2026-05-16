@@ -8,15 +8,15 @@ import (
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 
-	"github.com/niko/citysnap-bot/internal/handler/fsm"
-	"github.com/niko/citysnap-bot/internal/service"
+	"github.com/Niafon/Citysnap-bot/internal/handler/fsm"
+	"github.com/Niafon/Citysnap-bot/internal/service"
 )
 
 type BotHandler struct {
-	users   *service.UserService
-	swipes  *service.SwipeService
-	photos  *service.DailyPhotoService
-	fsm     *fsm.Storage
+	users  *service.UserService
+	swipes *service.SwipeService
+	photos *service.DailyPhotoService
+	fsm    *fsm.Storage
 }
 
 func New(
