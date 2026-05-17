@@ -115,7 +115,19 @@ func (h *BotHandler) finalizeSnap(ctx context.Context, b *bot.Bot, chatID, tgID 
 	}
 
 	user, err := h.users.GetByTelegramID(ctx, tgID)
-	if err != nil || user == nil {
+	if err != nil {
+		slog.Error("get user for finalize snap failed", "error", err, "tg_id", tgID)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Не получилось загрузить профиль. Попробуй еще раз чуть позже.",
+		})
+		return
+	}
+	if user == nil {
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Сначала зарегистрируйся через /start",
+		})
 		return
 	}
 
@@ -258,13 +270,29 @@ func (h *BotHandler) HandleMySnap(ctx context.Context, b *bot.Bot, update *model
 	chatID := update.Message.Chat.ID
 
 	user, err := h.users.GetByTelegramID(ctx, tgID)
-	if err != nil || user == nil {
+	if err != nil {
+		slog.Error("get user for mysnap failed", "error", err, "tg_id", tgID)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Не получилось загрузить профиль. Попробуй еще раз чуть позже.",
+		})
+		return
+	}
+	if user == nil {
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Сначала зарегистрируйся через /start",
+		})
 		return
 	}
 
 	photo, err := h.photos.GetActiveByUser(ctx, user.ID)
 	if err != nil {
 		slog.Error("get active snap failed", "error", err)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Не получилось загрузить активное фото. Попробуй еще раз чуть позже.",
+		})
 		return
 	}
 
@@ -280,13 +308,18 @@ func (h *BotHandler) HandleMySnap(ctx context.Context, b *bot.Bot, update *model
 	caption := fmt.Sprintf("Твоё активное фото\n\n⏳ осталось %dч | 👁 %d просмотров",
 		hoursLeft, photo.ViewCount)
 	if photo.Caption != "" {
-		caption += "\n\n" + bot.EscapeMarkdown(photo.Caption)
+		caption += "\n\n" + photo.Caption
 	}
 
-	b.SendPhoto(ctx, &bot.SendPhotoParams{
-		ChatID:    chatID,
-		Photo:     &models.InputFileString{Data: photo.PhotoFileID},
-		Caption:   caption,
-		ParseMode: models.ParseModeMarkdown,
-	})
+	if _, err := b.SendPhoto(ctx, &bot.SendPhotoParams{
+		ChatID:  chatID,
+		Photo:   &models.InputFileString{Data: photo.PhotoFileID},
+		Caption: caption,
+	}); err != nil {
+		slog.Error("send mysnap photo failed", "error", err, "tg_id", tgID, "photo_id", photo.ID)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   caption + "\n\nФото сейчас не удалось отправить, но оно найдено в базе.",
+		})
+	}
 }

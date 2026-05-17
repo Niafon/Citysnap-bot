@@ -33,7 +33,15 @@ func (h *BotHandler) HandleSearch(ctx context.Context, b *bot.Bot, update *model
 	chatID := update.Message.Chat.ID
 
 	user, err := h.users.GetByTelegramID(ctx, tgID)
-	if err != nil || user == nil {
+	if err != nil {
+		slog.Error("get user for search failed", "error", err, "tg_id", tgID)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Не получилось загрузить профиль. Попробуй еще раз чуть позже.",
+		})
+		return
+	}
+	if user == nil {
 		b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: chatID,
 			Text:   "Сначала зарегистрируйся через /start",
@@ -215,7 +223,15 @@ func (h *BotHandler) HandleMatches(ctx context.Context, b *bot.Bot, update *mode
 	chatID := update.Message.Chat.ID
 
 	user, err := h.users.GetByTelegramID(ctx, tgID)
-	if err != nil || user == nil {
+	if err != nil {
+		slog.Error("get user for matches failed", "error", err, "tg_id", tgID)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Не получилось загрузить профиль. Попробуй еще раз чуть позже.",
+		})
+		return
+	}
+	if user == nil {
 		b.SendMessage(ctx, &bot.SendMessageParams{ChatID: chatID, Text: "Сначала /start"})
 		return
 	}
@@ -223,6 +239,10 @@ func (h *BotHandler) HandleMatches(ctx context.Context, b *bot.Bot, update *mode
 	matches, err := h.swipes.GetMatches(ctx, user.ID)
 	if err != nil {
 		slog.Error("get matches failed", "error", err)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Не получилось загрузить мэтчи. Попробуй еще раз чуть позже.",
+		})
 		return
 	}
 
@@ -240,7 +260,11 @@ func (h *BotHandler) HandleMatches(ctx context.Context, b *bot.Bot, update *mode
 		if other == user.ID {
 			other = m.User2ID
 		}
-		otherUser, _ := h.users.GetByID(ctx, other)
+		otherUser, err := h.users.GetByID(ctx, other)
+		if err != nil {
+			slog.Error("get matched user failed", "error", err, "user_id", other)
+			continue
+		}
 		if otherUser != nil {
 			text += fmt.Sprintf("%d. *%s*, %d — 📍 %s\n",
 				i+1,
@@ -251,9 +275,14 @@ func (h *BotHandler) HandleMatches(ctx context.Context, b *bot.Bot, update *mode
 		}
 	}
 
-	b.SendMessage(ctx, &bot.SendMessageParams{
+	if _, err := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:    chatID,
 		Text:      text,
-		ParseMode: models.ParseModeMarkdown,
-	})
+	}); err != nil {
+		slog.Error("send matches failed", "error", err, "tg_id", tgID)
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: chatID,
+			Text:   "Мэтчи найдены, но Telegram не принял формат сообщения. Попробуй еще раз позже.",
+		})
+	}
 }
